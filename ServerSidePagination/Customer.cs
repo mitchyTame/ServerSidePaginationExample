@@ -11,8 +11,8 @@ namespace ServerSidePagination
 {
     using System;
     using System.Collections.Generic;
-    
-    public ser class Customer
+
+    public partial class Customer
     {
         public int CustomersID { get; set; }
         public string Name { get; set; }
@@ -23,4 +23,5 @@ namespace ServerSidePagination
         public string Account { get; set; }
         public string CreditCard { get; set; }
     }
+       
 }

@@ -3,27 +3,7 @@
 }
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Search Panel</h2>
-            <table>
-                <tbody>
-                    <tr>
-                        <td>Name</td>
-                        <td><input type="text" id="txtName" /></td>
-                        <td>
-                            Email
-                        </td>
-                        <td><input type="text" id="txtEmail" /></td>
-                        <td>
-                            <button class="btn btn-primary" type="button" id="btnSearch">Search</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row">
+    <div class="row" style="padding:20px">
         <div class="col-md-12">
             <table class="table table-striped" id="myTable">
                 <thead>
@@ -95,7 +75,7 @@
         $(document).ready(function () {
             $('#myTable').DataTable({
                 ajax: {
-                    url: "home/DataHandlerEditor",
+                    url: "home/LoadData",
                     type: "POST",
                 },
                 columns: [
@@ -106,14 +86,13 @@
                     { data: "Company" },
                     { data: "Account" },
                     {data: "CreditCard"}
-                ], columnDefs: [{
-                    searchPanes: {
-                        show: true,
-                    },
-                    targets: '_all',
-                }],
-                dom: 'Plfrtip',
-                serverSide: true
+                ], 
+                "order": [0, "asc"],
+                "serverSide": true,
+                "processing": true,
+                "language": {
+                    "processing": '<i class="fa fa-spinner fa-spin fa-3x fa-fw" style="color:red;"></i><span class="sr-only">Loading...</span> '
+                }
             });
         });
     </script>

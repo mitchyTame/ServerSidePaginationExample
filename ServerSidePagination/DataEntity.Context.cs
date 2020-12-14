@@ -13,10 +13,10 @@ namespace ServerSidePagination
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MyDataEntities : DbContext
+    public partial class ServerSideTestEntities : DbContext
     {
-        public MyDataEntities()
-            : base("name=MyDataEntities")
+        public ServerSideTestEntities()
+            : base("name=ServerSideTestEntities")
         {
         }
     

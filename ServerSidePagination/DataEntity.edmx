@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="dataSetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="ServerSideTestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Customers">
           <Key>
             <PropertyRef Name="CustomersID" />
@@ -18,14 +18,14 @@
           <Property Name="Account" Type="varchar" MaxLength="34" />
           <Property Name="CreditCard" Type="varchar" MaxLength="16" />
         </EntityType>
-        <EntityContainer Name="dataSetModelStoreContainer">
+        <EntityContainer Name="ServerSideTestModelStoreContainer">
           <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="dataSetModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="ServerSideTestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Customer">
           <Key>
             <PropertyRef Name="CustomersID" />
@@ -39,7 +39,7 @@
           <Property Name="Account" Type="String" MaxLength="34" FixedLength="false" Unicode="false" />
           <Property Name="CreditCard" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityContainer Name="MyDataEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="ServerSideTestEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Customers" EntityType="Self.Customer" />
         </EntityContainer>
       </Schema>
@@ -47,9 +47,9 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="dataSetModelStoreContainer" CdmEntityContainer="MyDataEntities">
+        <EntityContainerMapping StorageEntityContainer="ServerSideTestModelStoreContainer" CdmEntityContainer="ServerSideTestEntities">
           <EntitySetMapping Name="Customers">
-            <EntityTypeMapping TypeName="dataSetModel.Customer">
+            <EntityTypeMapping TypeName="ServerSideTestModel.Customer">
               <MappingFragment StoreEntitySet="Customers">
                 <ScalarProperty Name="CustomersID" ColumnName="CustomersID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />

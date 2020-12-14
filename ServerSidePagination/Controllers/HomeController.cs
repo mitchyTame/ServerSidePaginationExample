@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-
-using System.Web;
-using System.Web.Mvc;
-
-using System.Collections.Generic;
-using System.Web.UI.WebControls;
-using System.Linq.Dynamic.Core;
 using System.Linq;
-using System.Data.Entity;
-using DataTables;
-using Database = DataTables.Database;
+using System.Linq.Dynamic;
+using System.Linq.Dynamic.Core;
+using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace ServerSidePagination.Controllers
 {
-    
+
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -22,58 +16,38 @@ namespace ServerSidePagination.Controllers
             return View();
         }
 
-        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
+       [HttpPost]
         public ActionResult LoadData()
         {
             //Get Parameters
-            
+
             //Get Start (paging start index) and length(no of records)
-            var draw = Request.Form.GetValues("draw").FirstOrDefault();
-            var start = Request.Form.GetValues("start").FirstOrDefault();
-            var length = Request.Form.GetValues("length").FirstOrDefault();
+            int start = Convert.ToInt32(Request["start"]);
+            int length = Convert.ToInt32(Request["length"]);
+            string searchValue = Request["search[value]"];
             //Get Sort columns value
-            var sortColumn = Request.Form.GetValues("columns["+Request.Form.GetValues("order[0][column]").FirstOrDefault()+"][name]").FirstOrDefault();
-            var sortColumnDir = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            string sortDirection = Request["order[0][dir]"];
 
             //Find search columns
-            var searchName = Request.Form.GetValues("columns[0][search][value]").FirstOrDefault();
-            var searchEmail = Request.Form.GetValues("columns[3][search][value]").FirstOrDefault();
+            IList<Customer> customers = new List<Customer>();
 
-            int pageSize = length != null ? Convert.ToInt32(length) : 0;
-            int skip = start != null ? Convert.ToInt32(start) : 0;
-            int totalRecords = 0;
-
-            using(MyDataEntities dc = new MyDataEntities())
+            using(ServerSideTestEntities dc = new ServerSideTestEntities())
             {
-                var v = (from a in dc.Customers select a);
-
+                customers = dc.Customers.ToList();
+                int totalrows = customers.Count;
                 //Searching
-                if (!string.IsNullOrEmpty(searchName))
+                if (!string.IsNullOrEmpty(searchValue))
                 {
-                    v = v.Where(a => a.Name.Contains(searchName));
-                }
-                if(!string.IsNullOrEmpty(searchEmail))
-                {
-                    v = v.Where(a => a.Email.Contains(searchEmail));
-                }
-                //Sorting
-                if(!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
-                {
-                    v = v.OrderBy(sortColumn + " " + sortColumnDir);
+                    customers = customers.Where(x => x.Name.ToLower().Contains(searchValue.ToLower()) || x.City.ToLower().Contains(searchValue.ToLower()) || x.Email.ToLower().Contains(searchValue.ToLower())).ToList<Customer>();
                 }
 
-                totalRecords = v.Count();
-                var data = v.Skip(skip).Take(pageSize).ToList();
-                return Json(new {draw = draw, recordsFiltered = totalRecords, recordsTotal = totalRecords, data = data}, JsonRequestBehavior.AllowGet);
+                int totalrowsafterfiltering = customers.Count;
+                customers = sortDirection == "asc" ? customers.OrderBy(c => c.Name).ToList() : customers.OrderByDescending(c => c.Name).ToList();
+
+                customers = customers.Skip(start).Take(length).ToList<Customer>();
+
+                return Json(new { data = customers, draw = Request["draw"], recordsTotal = totalrows, recordsFiltered = totalrowsafterfiltering }, JsonRequestBehavior.AllowGet);
             }
-
-            
-
-
           }
-        [HttpPost]
-        public ActionResult DataHandlerEditor()
-        {   
-        }
     }
 }
